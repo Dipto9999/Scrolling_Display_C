@@ -40,10 +40,9 @@ static char output_buff[BUFFSIZE];
  * Only if the DAQ is Configured Appropriately.
  * PRE: NULL (no pre-conditions)
  * POST: NULL (no side-effects)
- * RETURN: IF the program exits correctly
- * 	 		THEN 0 ELSE 1
+ * RETURN: VOID
  */
-int main(void) {
+void main(void) {
 	/********************/
 	/* Local Variables */
 	/*******************/
@@ -99,7 +98,7 @@ int main(void) {
 
 	/* System Command Forces the System to Pause Before Closing Executable Window. */
 	system("PAUSE");
-	return FALSE;
+	exit(TRUE);
 }
 
 /*

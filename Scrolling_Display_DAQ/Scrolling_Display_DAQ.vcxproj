@@ -19,12 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="counters.c" />
-    <ClCompile Include="main.c" />
+    <ClCompile Include="src\counters.c" />
+    <ClCompile Include="src\main.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="counters.h" />
-    <ClInclude Include="main.h" />
+    <ClInclude Include="include\counters.h" />
+    <ClInclude Include="include\main.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -102,6 +102,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Scrolling_Display_DAQ\include;$(SolutionDir)\Scrolling_Display_DAQ\src;$(DAQLocalInstallPath)\include;$(DAQGlobalInstallPath)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
