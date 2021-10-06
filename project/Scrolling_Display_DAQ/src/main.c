@@ -35,6 +35,8 @@ static char input_buff[BUFFSIZE];
 static char input_extra[BUFFSIZE];
 static char output_buff[BUFFSIZE];
 
+static uint8_t display_scrolls;
+
 /*
  * Main Function Drives the Program. The Scrolling Display is Shown
  * Only if the DAQ is Configured Appropriately.
@@ -43,7 +45,9 @@ static char output_buff[BUFFSIZE];
  * RETURN: VOID
  */
 void main(void) {
-	scrollDisplay(phrase_message, PHRASE_LENGTH, configDAQ());
+	display_scrolls = configDAQ();
+
+	scrollDisplay(phrase_message, PHRASE_LENGTH, display_scrolls);
 
 	/* System Command Forces the System to Pause Before Closing Executable Window. */
 	system("PAUSE");
@@ -111,6 +115,9 @@ int8_t configDAQ(void) {
 void scrollDisplay(uint8_t* message, uint8_t message_length, int8_t number_scrolls) {
 	uint8_t loop_count = FALSE;
 
+	configButtons();
+
+	refreshDisplay(VALUE_MIN, NUMBER_DISPLAYS, FALSE);
 	shiftStartingMessage(message, message_length);
 
 	/* Implement Code For Scrolling Display. */
@@ -158,6 +165,8 @@ void shiftStartingMessage(uint8_t* message, uint8_t message_length) {
 
 	/* Shift Message Until The Left Edge of the Digital Displays. */
 	while (message_end <= VALUE_MIN) {
+		if (resetDAQ() == TRUE) scrollDisplay(message, message_length, display_scrolls);
+
 		/* Write Message to Digital Displays. */
 		for (relative_position = 0; relative_position < message_length; relative_position++) {
 			message_index = (message_length - 1) - relative_position;
@@ -195,6 +204,8 @@ void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 
 	/* Individually Shift Message Off Digital Displays. */
 	while (shift_index <= maximum_length) {
+		if (resetDAQ() == TRUE) scrollDisplay(message, message_length, display_scrolls);
+
 		message_end = shift_index + (NUMBER_DISPLAYS - message_length);
 
 		for (display_position = (NUMBER_DISPLAYS - 1); display_position >= minimum_offset; display_position--) {
@@ -241,6 +252,8 @@ void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop
 
 	/* Shift Message Until It Occupies the Left End of the Digital Displays. */
 	while (message_end <= maximum_offset) {
+		if (resetDAQ() == TRUE) scrollDisplay(message, message_length, display_scrolls);
+
 		/* Write Message to Digital Displays. */
 		for (relative_position = 0; relative_position < message_length; relative_position++) {
 			/* Shift Message Leftwards */
@@ -299,6 +312,8 @@ void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 	message_start = (loop_count > VALUE_DIGIT_MAX) ? VALUE_MIN - 1 : VALUE_MIN;
 
 	while (message_start < (message_length - 1)) {
+		if (resetDAQ() == TRUE) scrollDisplay(message, message_length, display_scrolls);
+
 		message_end = (loop_count > VALUE_DIGIT_MAX) ?
 			(message_start + 1) + (NUMBER_DISPLAYS - message_length) : message_start + (NUMBER_DISPLAYS - message_length);
 

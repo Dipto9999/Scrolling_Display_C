@@ -21,6 +21,7 @@
 #include <Windows.h>
 
 #include "counters.h"
+#include "buttons.h"
 
 /**************************/
 /* Precompiler Directives */

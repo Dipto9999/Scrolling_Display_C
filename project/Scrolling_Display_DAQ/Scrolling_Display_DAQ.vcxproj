@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\buttons.c" />
     <ClCompile Include="src\counters.c" />
     <ClCompile Include="src\main.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\buttons.h" />
     <ClInclude Include="include\counters.h" />
     <ClInclude Include="include\main.h" />
   </ItemGroup>
