@@ -251,11 +251,12 @@ void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop
 
 	int8_t message_end = FALSE;
 
+	int8_t maximum_offset = NUMBER_DISPLAYS - message_length;
+
 	/* Shift Message Until It Occupies the Left End of the Digital Displays. */
-	while (message_end <= (NUMBER_DISPLAYS - message_length)) {
+	while (message_end <= maximum_offset) {
 		/* Write Message to Digital Displays. */
 		for (relative_position = 0; relative_position < message_length; relative_position++) {
-
 			/* Turn Off all Displays Surrounding the Message. */
 			refreshDisplay(VALUE_MIN, message_end, FALSE);
 			refreshDisplay(message_end + message_length, NUMBER_DISPLAYS, FALSE);
@@ -269,8 +270,8 @@ void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop
 		}
 
 		/* Write Count to Appropriate Position. */
-		
-		if (loop_count != FALSE && message_end >= COUNT_APPEARS) {
+
+		if (loop_count != FALSE && message_end >= maximum_offset - 1) {
 			display_position = message_end - LAGGING_COUNT_OFFSET;
 			writeCounter(loop_count, display_position);
 		}
@@ -278,7 +279,7 @@ void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop
 			display_position = message_end + message_length + LEADING_COUNT_OFFSET;
 			writeCounter(loop_count - 1, display_position);
 		}
-			
+
 		/* Prepare to Shift Message. */
 		message_end++;
 
@@ -331,10 +332,10 @@ void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 			refreshDisplay(message_start + 1, message_end + 1, FALSE);
 			/* Loop Counter is Shown With a Single Digital Display Turned Off on Either Side. */
 		}
-		
+
 		display_position = message_start + LAGGING_COUNT_OFFSET;
 		writeCounter(loop_count, display_position);
-		
+
 		Sleep(DELAY_SHORT);
 	}
 }
