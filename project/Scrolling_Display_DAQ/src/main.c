@@ -93,7 +93,7 @@ int8_t configDAQ(void) {
 		handleError("\nExiting Program...\n\n");
 	else if (sscanf_s(input_buff, "%d%s", (int*)&number_scrolls, input_extra, BUFFSIZE) < TRUE)
 		handleError("\nInvalid Input: Did Not Enter Integer...\n\n");
-	else if ((number_scrolls < VALUE_MIN) || (number_scrolls > VALUE_DIGIT_MAX))
+	else if ((number_scrolls < VALUE_MIN) || (number_scrolls > VALUE_COUNTER_MAX))
 		handleError("\nInvalid Scrolling Configuration...\n\n");
 
 	return number_scrolls;
@@ -115,45 +115,11 @@ void scrollDisplay(uint8_t* message, uint8_t message_length, int8_t number_scrol
 
 	/* Implement Code For Scrolling Display. */
 	while (++loop_count < number_scrolls) {
-		refreshDisplay(message_length, NUMBER_DISPLAYS, FALSE);
-
-		/* Cases with Intact Phrase Shifting Through Displays. */
 		shiftCompleteMessage(message, message_length, loop_count);
 		shiftSeparatedMessage(message, message_length, loop_count);
 	}
 
 	endDisplay(message, message_length, loop_count);
-}
-
-void shiftStartingMessage(uint8_t* message, uint8_t message_length) {
-	/********************/
-	/* Local Variables */
-	/*******************/
-
-	int8_t message_index = FALSE;
-
-	int8_t relative_position = FALSE;
-	int8_t display_position = FALSE;
-
-	int8_t message_end = - message_length;
-
-	/* Shift Message Until The Left Edge of the Digital Displays. */
-	while (message_end <= VALUE_MIN) {
-		/* Write Message to Digital Displays. */
-		for (relative_position = 0; relative_position < message_length; relative_position++) {
-			message_index = (message_length - 1) - relative_position;
-
-			/* Shift Message Leftwards */
-			display_position = relative_position + message_end;
-
-			if (display_position >= VALUE_MIN) displayWrite(message[message_index], display_position);
-		}
-
-		/* Prepare to Shift Message. */
-		message_end++;
-
-		Sleep(DELAY_SHORT);
-	}
 }
 
 /*
@@ -178,20 +144,34 @@ void endDisplay(uint8_t* message, uint8_t message_length, uint8_t loop_count) {
 	return;
 }
 
-/*
- * Turns On/Off Unused Digital Displays.
- *
- * PARAM: refresh_start and refresh_end are int8_ts which represent
- * 		  the left and right bounds of displays to be turned off respectively.
- * PRE:	VALUE_MIN <= refresh_start < refresh_end <= NUMBER_DISPLAYS
- * POST: digital display at refresh_start .. led display at refresh_end
- * 		 are all turned off.
- * RETURN: VOID
- */
-void refreshDisplay(uint8_t refresh_start, uint8_t refresh_end, uint8_t turn_on) {
-	for (uint8_t refresh_index = refresh_start; refresh_index < refresh_end; refresh_index++) {
-		if (turn_on == FALSE) displayWrite(DISPLAY_OFF, refresh_index);
-		else if (turn_on == TRUE) displayWrite(DISPLAY_ON, refresh_index);
+void shiftStartingMessage(uint8_t* message, uint8_t message_length) {
+	/********************/
+	/* Local Variables */
+	/*******************/
+
+	int8_t message_index = FALSE;
+
+	int8_t relative_position = FALSE;
+	int8_t display_position = FALSE;
+
+	int8_t message_end = - (message_length - 1);
+
+	/* Shift Message Until The Left Edge of the Digital Displays. */
+	while (message_end <= VALUE_MIN) {
+		/* Write Message to Digital Displays. */
+		for (relative_position = 0; relative_position < message_length; relative_position++) {
+			message_index = (message_length - 1) - relative_position;
+
+			/* Shift Message Leftwards */
+			display_position = relative_position + message_end;
+
+			if (display_position >= VALUE_MIN) displayWrite(message[message_index], display_position);
+		}
+
+		/* Prepare to Shift Message. */
+		message_end++;
+
+		Sleep(DELAY_SHORT);
 	}
 }
 
@@ -202,10 +182,16 @@ void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 	int8_t relative_position = FALSE;
 	int8_t display_position = FALSE;
 
-	int8_t maximum_length = (loop_count != FALSE) ? message_length + LAGGING_COUNT_OFFSET : message_length;
-	int8_t minimum_offset = NUMBER_DISPLAYS - maximum_length;
+	int8_t minimum_offset = FALSE;
 
+	int8_t maximum_length = FALSE;
 	int8_t message_end = FALSE;
+
+	if (loop_count == FALSE) maximum_length = message_length;
+	else if (loop_count <= VALUE_DIGIT_MAX) maximum_length = message_length + MIN_COUNTER_LENGTH;
+	else if (loop_count <= VALUE_COUNTER_MAX) maximum_length = message_length + MAX_COUNTER_LENGTH;
+
+	minimum_offset = NUMBER_DISPLAYS- maximum_length;
 
 	/* Individually Shift Message Off Digital Displays. */
 	while (shift_index <= maximum_length) {
@@ -222,7 +208,7 @@ void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 
 		if (loop_count != FALSE) {
 			display_position = (NUMBER_DISPLAYS - maximum_length) + shift_index;
-			if (display_position < NUMBER_DISPLAYS) writeCounter(loop_count, display_position);
+			writeCounter(loop_count, display_position);
 		}
 
 		shift_index++;
@@ -257,26 +243,25 @@ void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop
 	while (message_end <= maximum_offset) {
 		/* Write Message to Digital Displays. */
 		for (relative_position = 0; relative_position < message_length; relative_position++) {
-			/* Turn Off all Displays Surrounding the Message. */
-			refreshDisplay(VALUE_MIN, message_end, FALSE);
-			refreshDisplay(message_end + message_length, NUMBER_DISPLAYS, FALSE);
-
-			message_index = (message_length - 1) - relative_position;
-
 			/* Shift Message Leftwards */
+			message_index = (message_length - 1) - relative_position;
 			display_position = relative_position + message_end;
 
 			displayWrite(message[message_index], display_position);
 		}
 
-		/* Write Count to Appropriate Position. */
+		/* Turn Off all Displays Surrounding the Message. */
+		refreshDisplay(VALUE_MIN, message_end, FALSE);
+		refreshDisplay(message_end + message_length, NUMBER_DISPLAYS, FALSE);
 
+		/* Write Count to Appropriate Position. */
 		if (loop_count != FALSE && message_end >= maximum_offset - 1) {
-			display_position = message_end - LAGGING_COUNT_OFFSET;
+			display_position = (loop_count > VALUE_DIGIT_MAX) ?
+				message_end - MAX_COUNTER_LENGTH : message_end - MIN_COUNTER_LENGTH;
 			writeCounter(loop_count, display_position);
 		}
 		else if (loop_count > (VALUE_MIN + 1)) {
-			display_position = message_end + message_length + LEADING_COUNT_OFFSET;
+			display_position = message_end + (message_length - 1) + LEADING_COUNT_OFFSET;
 			writeCounter(loop_count - 1, display_position);
 		}
 
@@ -306,17 +291,19 @@ void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 	int8_t message_index = FALSE;
 
 	int8_t display_position = FALSE;
+	int8_t relative_position = FALSE;
 
 	int8_t message_start = FALSE;
-
 	int8_t message_end = FALSE;
-	int8_t relative_end = FALSE;
 
-	for (message_start = VALUE_MIN; message_start < (message_length - 1); message_start++) {
-		message_end = message_start + (NUMBER_DISPLAYS - message_length);
+	message_start = (loop_count > VALUE_DIGIT_MAX) ? VALUE_MIN - 1 : VALUE_MIN;
+
+	while (message_start < (message_length - 1)) {
+		message_end = (loop_count > VALUE_DIGIT_MAX) ?
+			(message_start + 1) + (NUMBER_DISPLAYS - message_length) : message_start + (NUMBER_DISPLAYS - message_length);
 
 		for (display_position = 0; display_position < NUMBER_DISPLAYS; display_position++) {
-			relative_end = display_position - message_end;
+			relative_position = display_position - message_end;
 			/* Part of Message Moved To Right End of Displays. */
 			if (display_position <= message_start) {
 				message_index = message_start - display_position;
@@ -324,19 +311,39 @@ void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 			}
 			/* Remaining Message at Left End of Displays. */
 			else if (display_position > message_end) {
-				message_index = display_position - (message_start + 2 * (relative_end - 1));
+				message_index = (loop_count > VALUE_DIGIT_MAX) ?
+					display_position - ((message_start + 1) + 2 * (relative_position - 1)) : display_position - (message_start + 2 * (relative_position - 1));
 				displayWrite(message[message_index], display_position);
 			}
-
-			/* Turn Off Digital Displays in Between Message. */
-			refreshDisplay(message_start + 1, message_end + 1, FALSE);
-			/* Loop Counter is Shown With a Single Digital Display Turned Off on Either Side. */
 		}
 
-		display_position = message_start + LAGGING_COUNT_OFFSET;
+		display_position = message_start + LEADING_COUNT_OFFSET;
+
+		/* Loop Counter is Shown With a Single Digital Display Turned Off on Either Side. */
+		refreshDisplay(message_start + 1, message_end + 1, FALSE);
 		writeCounter(loop_count, display_position);
 
+		/* Prepare to Shift Message. */
+		message_start++;
+
 		Sleep(DELAY_SHORT);
+	}
+}
+
+/*
+ * Turns On/Off Unused Digital Displays.
+ *
+ * PARAM: refresh_start and refresh_end are int8_ts which represent
+ * 		  the left and right bounds of displays to be turned off respectively.
+ * PRE:	VALUE_MIN <= refresh_start < refresh_end <= NUMBER_DISPLAYS
+ * POST: digital display at refresh_start .. led display at refresh_end
+ * 		 are all turned off.
+ * RETURN: VOID
+ */
+void refreshDisplay(uint8_t refresh_start, uint8_t refresh_end, uint8_t turn_on) {
+	for (uint8_t refresh_index = refresh_start; refresh_index < refresh_end; refresh_index++) {
+		if (turn_on == FALSE) displayWrite(DISPLAY_OFF, refresh_index);
+		else if (turn_on == TRUE) displayWrite(DISPLAY_ON, refresh_index);
 	}
 }
 

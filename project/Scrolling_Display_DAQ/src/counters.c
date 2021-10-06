@@ -18,18 +18,20 @@
  * POST: counter is displayed on digital displays starting from display_offset.
  * RETURN: VOID
  */
-void writeCounter(uint8_t counter, int8_t display_offset) {
+void writeCounter(uint8_t counter, int8_t display_position) {
 	/********************/
 	/* Local Variables */
 	/*******************/
 
 	uint8_t current_digit = FALSE;
-	int8_t current_position = display_offset;
+	int8_t current_position = display_position;
+
+	if (display_position >= NUMBER_DISPLAYS) return;
 
 	/* Write Counter to Digital Display. */
 	do {
 		current_digit = counter % (VALUE_DIGIT_MAX + 1);
-		writeDigit(current_digit, current_position);
+		if (current_position >= VALUE_MIN) writeDigit(current_digit, current_position);
 
 		/* Prepare to Display Next Digit. */
 		counter /= (VALUE_DIGIT_MAX + 1);
@@ -48,37 +50,37 @@ void writeCounter(uint8_t counter, int8_t display_offset) {
  * POST: digit is displayed on led display at position.
  * RETURN:	VOID
  */
-void writeDigit(uint8_t digit, int8_t position) {
+void writeDigit(uint8_t digit, int8_t display_position) {
 	switch (digit) {
 		case 0 :
-			displayWrite(DISPLAY_0, position);
+			displayWrite(DISPLAY_0, display_position);
 			break;
 		case 1 :
-			displayWrite(DISPLAY_1, position);
+			displayWrite(DISPLAY_1, display_position);
 			break;
 		case 2 :
-			displayWrite(DISPLAY_2, position);
+			displayWrite(DISPLAY_2, display_position);
 			break;
 		case 3 :
-			displayWrite(DISPLAY_3, position);
+			displayWrite(DISPLAY_3, display_position);
 			break;
 		case 4 :
-			displayWrite(DISPLAY_4, position);
+			displayWrite(DISPLAY_4, display_position);
 			break;
 		case 5 :
-			displayWrite(DISPLAY_5, position);
+			displayWrite(DISPLAY_5, display_position);
 			break;
 		case 6 :
-			displayWrite(DISPLAY_6, position);
+			displayWrite(DISPLAY_6, display_position);
 			break;
 		case 7 :
-			displayWrite(DISPLAY_7, position);
+			displayWrite(DISPLAY_7, display_position);
 			break;
 		case 8 :
-			displayWrite(DISPLAY_8, position);
+			displayWrite(DISPLAY_8, display_position);
 			break;
 		case 9 :
-			displayWrite(DISPLAY_9, position);
+			displayWrite(DISPLAY_9, display_position);
 			break;
 		/* Digit Isn't In the Specified Range. */
 		default:

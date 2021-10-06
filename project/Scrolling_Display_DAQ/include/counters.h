@@ -63,7 +63,7 @@ typedef enum {
 /* Function Prototypes */
 /***********************/
 
-void writeCounter(uint8_t counter, int8_t display_offset);
-void writeDigit(uint8_t digit, int8_t position);
+void writeCounter(uint8_t counter, int8_t display_position);
+void writeDigit(uint8_t digit, int8_t display_position);
 
 #endif

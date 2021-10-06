@@ -33,6 +33,9 @@
 #define PHRASE_LENGTH 5
 #define ENDING_LENGTH 6
 
+#define MIN_COUNTER_LENGTH 2
+#define MAX_COUNTER_LENGTH 3
+
 /* Active High Signals used to Turn On 7-Segment Displays. */
 #define DISPLAY_H 0b01101110
 #define DISPLAY_E 0b10011110
@@ -43,8 +46,7 @@
 #define DISPLAY_y 0b01110110
 #define DISPLAY_e 0b11011110
 
-#define LAGGING_COUNT_OFFSET 2
-#define LEADING_COUNT_OFFSET 1
+#define LEADING_COUNT_OFFSET 2
 
 /****************/
 /* Enumerations */
@@ -74,15 +76,13 @@ extern uint8_t ending_message[];
 int8_t configDAQ(void);
 
 void scrollDisplay(uint8_t* message, uint8_t message_length, int8_t number_scrolls);
+void endDisplay(uint8_t* message, uint8_t message_length, uint8_t loop_count);
 
 void shiftStartingMessage(uint8_t* message, uint8_t message_length);
 void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count);
 
 void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count);
-
 void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count);
-
-void endDisplay(uint8_t* message, uint8_t message_length, uint8_t loop_count);
 
 void refreshDisplay(uint8_t refresh_start, uint8_t refresh_end, uint8_t turn_on);
 
