@@ -73,3 +73,14 @@ The video in the [`demonstrations`](demonstrations) directory shows the end resu
 The idea for this project was derived from <b>The University of British Columbia Electrical and Computer Engineering</b> Undergraduate program. The <b>APSC 160 - Introduction to Computation</b> course requirement involveS a final project which acted as the inspiration for this program. A Scrolling 'HELLO' Display originally designed using <b>C Programming</b> concepts in <b>APSC 160</b> was refactored through the use of advanced programming principles.
 
 The entire design document is included in the [(`design.pdf`)](design.pdf) file.
+
+			/*
+			 * Phrase Indices Should Correspond to Appropriate Display Positions (i.e OccupiedMid
+			 * Portion of Design). The Relative Display Position is Mirror to the Array Indices.
+			 *
+			 * phrase_message[PHRASE_LENGTH - 1] is written in the 1st relative display position.
+			 * phrase_message[PHRASE_LENGTH - 2] is written in the 2nd relative display position.
+			 * ...
+			 * phrase_message[1] is displayed in the 2nd last position.
+			 * phrase_message[0] is displayed in the last position.
+			*/
