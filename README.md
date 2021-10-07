@@ -51,7 +51,7 @@ The **C** source code is written to be compiled and run in the <b>Visual Studio 
 
 The <b>DAQ</b> **C** library is installed to gain access to the simulator used in this program. I have included the [(`DAQlib`)](project/DAQlib) installation folder in the repository.
 
-In order to gain access to the <b>DAQ</b> functions in our program, we must include the [(`DAQlib.h`)](project\DAQlib\include\DAQlib.h) header file in our code.
+In order to gain access to the <b>DAQ</b> functions in our program, we must include the [(`DAQlib.h`)](project/DAQlib/include/DAQlib.h) header file in our code.
 
 #### Encoding
 
