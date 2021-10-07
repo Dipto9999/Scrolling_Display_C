@@ -21,7 +21,7 @@
     <ClCompile Include="src\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\buttons.c">
+    <ClCompile Include="src\switches.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClInclude Include="include\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\buttons.h">
+    <ClInclude Include="include\switches.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

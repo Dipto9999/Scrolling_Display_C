@@ -1,7 +1,6 @@
 /*
  * File : main.c
- * Purpose:	To Implement a Scrolling Message on 7-Segment Digital Displays.
- * 			and Event Buttons.
+ * Purpose:	To Implement a Scrolling Message on 8-Segment Digital Displays.
  * 		Input: DAQ Module Configuration and Number of Scrolling Display Iterations.
  *		Output:	Message and Counter Value Scrolls on Digital Display Screen.
  * Author: Muntakim Rahman
@@ -111,8 +110,8 @@ int8_t configDAQ(void) {
 /*
  * Scrolls a Message on the Digital Displays.
  *
- * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
- * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * PARAM: message is a uint8_t pointer to an array of bytes to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of bytes in the message;
  * 		  number_scrolls is an int8_t which represents the number of iterations;
  * PRE: DAQ module configured appropriately; VALUE_MIN <= number_scrolls <= VALUE_COUNTER_MAX.
  * POST: message is iteratively scrolled on the digital displays.
@@ -121,7 +120,7 @@ int8_t configDAQ(void) {
 void scrollDisplay(uint8_t* message, uint8_t message_length, int8_t number_scrolls) {
 	uint8_t counter = FALSE;
 
-	configButtons();
+	configSwitches();
 
 	/* Turn Off All Digital Displays. */
 	refreshDisplay(VALUE_MIN, NUMBER_DISPLAYS, FALSE);
@@ -141,8 +140,8 @@ void scrollDisplay(uint8_t* message, uint8_t message_length, int8_t number_scrol
 /*
  * Concludes Scrolling Display Iterations and Scrolls an Ending Message.
  *
- * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
- * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * PARAM: message is a uint8_t pointer to an array of bytes to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of bytes in the message;
  * 		  counter is a uint8_t representing the current iteration of the scrolling display.
  * PRE: message is written to appropriate digital displays; VALUE_MIN <= counter <= VALUE_COUNTER_MAX.
  * POST: digital displays are all turned on to indicate end of program.
@@ -168,8 +167,8 @@ void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter) {
 /*
  * Message is Scrolled Onto the Digital Displays.
  *
- * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
- * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * PARAM: message is a uint8_t pointer to an array of bytes to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of bytes in the message;
  * PRE: all digital displays are turned off.
  * POST: message is written to appropriate digital displays;
  * RETURN: VOID
@@ -209,8 +208,8 @@ void shiftStartingMessage(uint8_t* message, uint8_t message_length) {
 /*
  * Message is Scrolled Off the Digital Displays.
  *
- * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
- * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * PARAM: message is a uint8_t pointer to an array of bytes to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of bytes in the message;
  * 		  counter is a uint8_t representing the current iteration of the scrolling display.
  * PRE: message is written to appropriate digital displays; VALUE_MIN <= counter <= VALUE_COUNTER_MAX.
  * POST: all digital displays are turned off to indicate end of scrolling iterations.
@@ -265,8 +264,8 @@ void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t cou
 /*
  * Complete Message is Shifted on Digital Displays.
  *
- * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
- * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * PARAM: message is a uint8_t pointer to an array of bytes to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of bytes in the message;
  * 		  counter is a uint8_t representing the current iteration of the scrolling display.
  * PRE: message is written to appropriate digital displays; VALUE_MIN <= counter <= VALUE_COUNTER_MAX.
  * POST: message is written to appropriate digital displays;
@@ -332,8 +331,8 @@ void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t coun
 /*
  * Message is Separately Shifted on Digital Displays.
  *
- * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
- * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * PARAM: message is a uint8_t pointer to an array of bytes to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of bytes in the message;
  * 		  counter is a uint8_t representing the current iteration of the scrolling display.
  * PRE: message is written to appropriate digital displays; VALUE_MIN <= counter <= VALUE_COUNTER_MAX.
  * POST: message is written to appropriate digital displays;

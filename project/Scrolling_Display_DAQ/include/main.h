@@ -20,7 +20,7 @@
 
 #include <Windows.h>
 
-#include "buttons.h"
+#include "switches.h"
 #include "counters.h"
 
 /**************************/
@@ -31,7 +31,7 @@
 
 #define BUFFSIZE 512
 
-/* Active High Signals used to Turn On 7-Segment Displays. */
+/* Active High Signals used to Turn On 8-Segment Displays. */
 #define DISPLAY_H 0b01101110
 #define DISPLAY_E 0b10011110
 #define DISPLAY_L 0b00011100

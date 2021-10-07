@@ -28,7 +28,7 @@
 
 #define NUMBER_DISPLAYS 8
 
-/* Active High Signals used to Turn On 7-Segment Displays. */
+/* Active High Signals used to Turn On 8-Segment Displays. */
 #define DISPLAY_OFF 0b00000000
 #define DISPLAY_ON 0b11111111
 

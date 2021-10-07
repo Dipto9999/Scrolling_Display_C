@@ -19,14 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\buttons.c" />
     <ClCompile Include="src\counters.c" />
     <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\switches.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\buttons.h" />
     <ClInclude Include="include\counters.h" />
     <ClInclude Include="include\main.h" />
+    <ClInclude Include="include\switches.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
