@@ -135,7 +135,7 @@ For this example, our scrolling display counter is *9*.
 
 #### Counters
 
-The `void shiftCompleteMessage(...);` and `void shiftSeparatedMessage(...);` functions have been written to handle single digit and double digit counters. Based on the appropriate display position, they call the `void writeCounter(uint8_t counter, int8_t starting_position);` function from the [(`counters.c`)]((project/Scrolling_Display_DAQ/src/counters.c)) source file. The following display cases are implemented when the scrolling display counter is greater than *9*.
+The `void shiftCompleteMessage(...);` and `void shiftSeparatedMessage(...);` functions have been written to handle single digit and double digit counters. Based on the appropriate display position, they call the `void writeCounter(uint8_t counter, int8_t starting_position);` function from the [(`counters.c`)](project/Scrolling_Display_DAQ/src/counters.c) source file. The following display cases are implemented when the scrolling display counter is greater than *9*.
 
 | <b>Display Case</b> | <b>Digital Displays</b> |
 | -------- | ----------------------- |
@@ -171,9 +171,6 @@ For this example, our scrolling display counter is *19*.
 ### Program End
 
 The `void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter);` function is used to implement the following display cases. After the scrolling iterations of the <i>'HELLO'</i> message have finished, a <i>'byebye'</i> message is scrolled to conclude the program. This is done by calling the `void shiftStartingMessage(...);`, `void shiftCompleteMessage(...);`, and `void shiftFinishingMessage(...);` functions.
-
-
-This call the `void writeCounter(uint8_t counter, int8_t starting_position);` function from the [(`counters.c`)]((project/Scrolling_Display_DAQ/src/counters.c)) source file.
 
 | <b>Display Case</b> | <b>Digital Displays</b> |
 | -------- | ----------------------- |
