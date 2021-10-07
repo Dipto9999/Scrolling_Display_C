@@ -1,13 +1,11 @@
 /*
  * File : main.c
- * Purpose:	To Implement a Scrolling Phrase on an LED Screen Consisting of 8 Custom 7-Segment Displays
- * 	and 2 Toggle Switches.
- * 		Input: Scrolling Configuration
- *		Output:	Scrolling Message on LED screen
- *	UBC APSC Data Acquisition (DAQ) C Library Installed to Make Use of the Given
- * 	Functions and Simulate the Scrolling Display.
+ * Purpose:	To Implement a Scrolling Message on 7-Segment Digital Displays.
+ * 			and Event Buttons.
+ * 		Input: DAQ Module Configuration and Number of Scrolling Display Iterations.
+ *		Output:	Message and Counter Value Scrolls on Digital Display Screen.
  * Author: Muntakim Rahman
- * Date: 2021-05-28
+ * Date: 2021-10-06
  */
 
 #include "main.h"
@@ -38,8 +36,8 @@ static char output_buff[BUFFSIZE];
 static uint8_t display_scrolls;
 
 /*
- * Main Function Drives the Program. The Scrolling Display is Shown
- * Only if the DAQ is Configured Appropriately.
+ * Main Function Drives the Program. The Message Scrolls
+ * on the Digital Displays Only if the DAQ Module is Appropriately Configured.
  * PRE: NULL (no pre-conditions)
  * POST: NULL (no side-effects)
  * RETURN: VOID
@@ -49,18 +47,24 @@ void main(void) {
 
 	scrollDisplay(phrase_message, PHRASE_LENGTH, display_scrolls);
 
-	/* System Command Forces the System to Pause Before Closing Executable Window. */
+	/* Force System to Pause Before Closing Executable Window. */
 	system("PAUSE");
 	exit(TRUE);
 }
 
+/*
+ * Prompt the User for DAQ Module Configuration and Number of Scrolling Display Configurations.
+ * PRE: NULL (no pre-conditions)
+ * POST: DAQ module is configured appropriately.
+ * RETURN: number of iterations for scrolling display to complete.
+ */
 int8_t configDAQ(void) {
 	/* Local Variables */
+
 	int display_config = FALSE;
 	int number_scrolls = FALSE;
 
-	/* DAQ Configuration Message */
-
+	/* DAQ Configuration */
 	strcpy_s(output_buff, BUFFSIZE, "Enter the Configuration Type: (");
 
 	input_buff[0] = '0' + DEVICE_CONFIG;
@@ -74,7 +78,7 @@ int8_t configDAQ(void) {
 	/* Print to Standard Output. */
 	fprintf(stdout, output_buff);
 
-	/* Check for Valid Input */
+	/* Check for Valid DAQ Configuration. */
 	if (!fgets(input_buff, BUFFSIZE, stdin))
 		handleError("\nExiting Program...\n\n");
 	else if (sscanf_s(input_buff, "%d%s", (int*)&display_config, input_extra, BUFFSIZE) < TRUE)
@@ -83,16 +87,17 @@ int8_t configDAQ(void) {
 		handleError("\nInvalid Display Configuration...\n\n");
 	else setupDAQ(display_config);
 
-	/* Scroll Limit Message */
-
-	input_buff[0] = '0' + VALUE_DIGIT_MAX;
+	/* Number of Iterations */
+	input_buff[0] = '0' + VALUE_COUNTER_MAX % (VALUE_DIGIT_MAX + 1);
+	input_buff[1] = '0' + (VALUE_COUNTER_MAX / (VALUE_DIGIT_MAX + 1)) % (VALUE_DIGIT_MAX + 1);
 	strcpy_s(output_buff, BUFFSIZE, "Number of Iterations (Must Be Less Than or Equal To ");
-	strncat_s(output_buff, BUFFSIZE, input_buff, sizeof(char));
+	strncat_s(output_buff, BUFFSIZE, input_buff, 2 * sizeof(char));
 	strcat_s(output_buff, BUFFSIZE, ") : ");
 
 	/* Print to Standard Output. */
 	fprintf(stdout, output_buff);
 
+	/* Check for Valid Scrolling Configuration. */
 	if (!fgets(input_buff, BUFFSIZE, stdin))
 		handleError("\nExiting Program...\n\n");
 	else if (sscanf_s(input_buff, "%d%s", (int*)&number_scrolls, input_extra, BUFFSIZE) < TRUE)
@@ -104,57 +109,73 @@ int8_t configDAQ(void) {
 }
 
 /*
- * Scrolls Phrase on Custom LED Display.
+ * Scrolls a Message on the Digital Displays.
  *
- * PARAM: number_scrolls is a uint8_t which represents the number
- * 		  of iterations for the scrolling display.
- * PRE: DAQ module configured for either device or simulator.
- * POST: scrolling display is shown to user.
+ * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * 		  number_scrolls is an int8_t which represents the number of iterations;
+ * PRE: DAQ module configured appropriately; VALUE_MIN <= number_scrolls <= VALUE_COUNTER_MAX.
+ * POST: message is iteratively scrolled on the digital displays.
  * RETURN: VOID
  */
 void scrollDisplay(uint8_t* message, uint8_t message_length, int8_t number_scrolls) {
-	uint8_t loop_count = FALSE;
+	uint8_t counter = FALSE;
 
 	configButtons();
 
+	/* Turn Off All Digital Displays. */
 	refreshDisplay(VALUE_MIN, NUMBER_DISPLAYS, FALSE);
+
 	shiftStartingMessage(message, message_length);
 
-	/* Implement Code For Scrolling Display. */
-	while (++loop_count < number_scrolls) {
-		shiftCompleteMessage(message, message_length, loop_count);
-		shiftSeparatedMessage(message, message_length, loop_count);
+	/* Iteratively Scroll Message on Digital Displays. */
+	while (++counter < number_scrolls) {
+		shiftCompleteMessage(message, message_length, counter);
+		shiftSeparatedMessage(message, message_length, counter);
 	}
 
-	endDisplay(message, message_length, loop_count);
+	/* Conclude Scrolling Display Iterations. */
+	endDisplay(message, message_length, counter);
 }
 
 /*
- * Phrase is Individually Shifted Off the Digital Displays.
+ * Concludes Scrolling Display Iterations and Scrolls an Ending Message.
  *
- * PARAM:     loop_count is a uint8_t representing the current loop iteration.
- * PRE:       0 <= loop_count <= VALUE_DIGIT_MAX;
- *            phrase occupies digital display at VALUE_MIN ... digital display at PHRASE_LENGTH.
- * POST:      all digital displays are turned off.
- * RETURN:    VOID
+ * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * 		  counter is a uint8_t representing the current iteration of the scrolling display.
+ * PRE: message is written to appropriate digital displays; VALUE_MIN <= counter <= VALUE_COUNTER_MAX.
+ * POST: digital displays are all turned on to indicate end of program.
+ * RETURN: VOID
  */
-void endDisplay(uint8_t* message, uint8_t message_length, uint8_t loop_count) {
-	shiftCompleteMessage(message, message_length, loop_count);
-	shiftFinishingMessage(message, message_length, loop_count);
+void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter) {
+	/* Shift Message Off of Digital Displays. */
+	shiftCompleteMessage(message, message_length, counter);
+	shiftFinishingMessage(message, message_length, counter);
 
+	/* Shift Ending Message to Indicate End of Program. */
 	shiftStartingMessage(ending_message, ENDING_LENGTH);
 	shiftCompleteMessage(ending_message, ENDING_LENGTH, FALSE);
 	shiftFinishingMessage(ending_message, ENDING_LENGTH, FALSE);
 
+	/* Turn All Digital Displays On. */
 	refreshDisplay(VALUE_MIN, NUMBER_DISPLAYS, TRUE);
 
-	return;
+	Sleep(DELAY_STANDARD);
+	exit(TRUE);
 }
 
+/*
+ * Message is Scrolled Onto the Digital Displays.
+ *
+ * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * PRE: all digital displays are turned off.
+ * POST: message is written to appropriate digital displays;
+ * RETURN: VOID
+ */
 void shiftStartingMessage(uint8_t* message, uint8_t message_length) {
-	/********************/
 	/* Local Variables */
-	/*******************/
 
 	int8_t message_index = FALSE;
 
@@ -163,7 +184,7 @@ void shiftStartingMessage(uint8_t* message, uint8_t message_length) {
 
 	int8_t message_end = - (message_length - 1);
 
-	/* Shift Message Until The Left Edge of the Digital Displays. */
+	/* Shift Message Onto the Digital Displays. */
 	while (message_end <= VALUE_MIN) {
 		if (resetDAQ() == TRUE) scrollDisplay(message, message_length, display_scrolls);
 
@@ -171,9 +192,10 @@ void shiftStartingMessage(uint8_t* message, uint8_t message_length) {
 		for (relative_position = 0; relative_position < message_length; relative_position++) {
 			message_index = (message_length - 1) - relative_position;
 
-			/* Shift Message Leftwards */
+			/* Shift Message Leftwards. */
 			display_position = relative_position + message_end;
 
+			/* Write Message to Display Positions Within Specified Range. */
 			if (display_position >= VALUE_MIN) displayWrite(message[message_index], display_position);
 		}
 
@@ -184,31 +206,41 @@ void shiftStartingMessage(uint8_t* message, uint8_t message_length) {
 	}
 }
 
-void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count) {
+/*
+ * Message is Scrolled Off the Digital Displays.
+ *
+ * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * 		  counter is a uint8_t representing the current iteration of the scrolling display.
+ * PRE: message is written to appropriate digital displays; VALUE_MIN <= counter <= VALUE_COUNTER_MAX.
+ * POST: all digital displays are turned off to indicate end of scrolling iterations.
+ */
+void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t counter) {
+	/* Local Variables */
+
 	int8_t shift_index = FALSE;
 	int8_t message_index = FALSE;
 
 	int8_t relative_position = FALSE;
+	int8_t starting_position = FALSE;
 	int8_t display_position = FALSE;
-
-	int8_t minimum_offset = FALSE;
 
 	int8_t maximum_length = FALSE;
 	int8_t message_end = FALSE;
 
-	if (loop_count == FALSE) maximum_length = message_length;
-	else if (loop_count <= VALUE_DIGIT_MAX) maximum_length = message_length + MIN_COUNTER_LENGTH;
-	else if (loop_count <= VALUE_COUNTER_MAX) maximum_length = message_length + MAX_COUNTER_LENGTH;
+	if (counter == FALSE) maximum_length = message_length;
+	else if (counter <= VALUE_DIGIT_MAX) maximum_length = message_length + MIN_COUNTER_LENGTH;
+	else if (counter <= VALUE_COUNTER_MAX) maximum_length = message_length + MAX_COUNTER_LENGTH;
 
-	minimum_offset = NUMBER_DISPLAYS- maximum_length;
+	starting_position = NUMBER_DISPLAYS - maximum_length;
 
-	/* Individually Shift Message Off Digital Displays. */
+	/* Shift Message Off of the Digital Displays. */
 	while (shift_index <= maximum_length) {
 		if (resetDAQ() == TRUE) scrollDisplay(message, message_length, display_scrolls);
 
 		message_end = shift_index + (NUMBER_DISPLAYS - message_length);
 
-		for (display_position = (NUMBER_DISPLAYS - 1); display_position >= minimum_offset; display_position--) {
+		for (display_position = (NUMBER_DISPLAYS - 1); display_position >= starting_position; display_position--) {
 			relative_position = display_position - message_end;
 			message_index = (message_length - 1) - relative_position;
 
@@ -217,11 +249,13 @@ void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 			else displayWrite(DISPLAY_OFF, display_position);
 		}
 
-		if (loop_count != FALSE) {
+		/* Write Counter to Appropriate Display Position. */
+		if (counter != FALSE) {
 			display_position = (NUMBER_DISPLAYS - maximum_length) + shift_index;
-			writeCounter(loop_count, display_position);
+			writeCounter(counter, display_position);
 		}
 
+		/* Prepare to Shift Message. */
 		shift_index++;
 
 		Sleep(DELAY_SHORT);
@@ -229,53 +263,51 @@ void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 }
 
 /*
- * Intact Phrase is Written to Appropriate Digital Displays to Create Scrolling Effect.
+ * Complete Message is Shifted on Digital Displays.
  *
- * PARAM: loop_count is an uint8_t representing the current loop iteration.
- * PRE: VALUE_MIN <= loop_count <= VALUE_DIGIT_MAX, 0 <= refresh_start <= refresh_end <= NUMBER_DISPLAYS
- * POST: phrase occupies digital display at PHRASE_LENGTH .. digital display at NUMBER_DISPLAYS.
+ * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * 		  counter is a uint8_t representing the current iteration of the scrolling display.
+ * PRE: message is written to appropriate digital displays; VALUE_MIN <= counter <= VALUE_COUNTER_MAX.
+ * POST: message is written to appropriate digital displays;
  * RETURN: VOID
  */
-void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count) {
-	/********************/
+void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t counter) {
 	/* Local Variables */
-	/*******************/
 
 	int8_t message_index = FALSE;
 
 	int8_t relative_position = FALSE;
 	int8_t display_position = FALSE;
+	int8_t starting_position = NUMBER_DISPLAYS - message_length;
 
 	int8_t message_end = FALSE;
 
-	int8_t maximum_offset = NUMBER_DISPLAYS - message_length;
-
-	/* Shift Message Until It Occupies the Left End of the Digital Displays. */
-	while (message_end <= maximum_offset) {
+	/* Shift Message Leftwards On the Digital Displays. */
+	while (message_end <= starting_position) {
 		if (resetDAQ() == TRUE) scrollDisplay(message, message_length, display_scrolls);
 
-		/* Write Message to Digital Displays. */
 		for (relative_position = 0; relative_position < message_length; relative_position++) {
-			/* Shift Message Leftwards */
 			message_index = (message_length - 1) - relative_position;
 			display_position = relative_position + message_end;
 
+			/* Write Message to the Appropriate Display Positions. */
 			displayWrite(message[message_index], display_position);
 		}
 
-		/* Turn Off all Displays Surrounding the Message. */
+		/* Turn Off Digital Displays Surrounding the Message. */
 		refreshDisplay(VALUE_MIN, message_end, FALSE);
 		refreshDisplay(message_end + message_length, NUMBER_DISPLAYS, FALSE);
 
-		/* Write Count to Appropriate Position. */
-		if (loop_count != FALSE && message_end >= maximum_offset - 1) {
-			display_position = (loop_count > VALUE_DIGIT_MAX) ?
+		/* Write Counter to Appropriate Display Position. */
+		if (counter != FALSE && message_end >= starting_position - 1) {
+			display_position = (counter > VALUE_DIGIT_MAX) ?
 				message_end - MAX_COUNTER_LENGTH : message_end - MIN_COUNTER_LENGTH;
-			writeCounter(loop_count, display_position);
+			writeCounter(counter, display_position);
 		}
-		else if (loop_count > (VALUE_MIN + 1)) {
-			display_position = message_end + (message_length - 1) + LEADING_COUNT_OFFSET;
-			writeCounter(loop_count - 1, display_position);
+		else if (counter > (VALUE_MIN + 1)) {
+			display_position = message_end + (message_length - 1) + LEADING_COUNTER_OFFSET;
+			writeCounter(counter - 1, display_position);
 		}
 
 		/* Prepare to Shift Message. */
@@ -289,17 +321,26 @@ void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop
 /*
  * Broken Phrase is Written to Appropriate Digital Displays to Create Scrolling Effect.
  *
- * PARAM: loop_count is a uint8_t representing the current loop iteration.
- * PRE: VALUE_MIN <= loop_count <= VALUE_DIGIT_MAX;
+ * PARAM: counter is a uint8_t representing the current loop iteration.
+ * PRE: VALUE_MIN <= counter <= VALUE_DIGIT_MAX;
  *	    phrase occupies digital display at PHRASE_LENGTH ... NUMBER_DISPLAYS.
  * POST: phrase occupies digital display at VALUE_MIN ... ((PHRASE_LENGTH - 1) - 1)
  *       and digital display at (NUMBER_DISPLAYS - 1); creates a "broken" phrase effect.
  * RETURN: VOID
  */
-void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count) {
-	/********************/
+
+/*
+ * Message is Separately Shifted on Digital Displays.
+ *
+ * PARAM: message is a uint8_t pointer to an array of characters to write to the digital displays;
+ * 		  message_length is a uint8_t which represents the number of characters in the message;
+ * 		  counter is a uint8_t representing the current iteration of the scrolling display.
+ * PRE: message is written to appropriate digital displays; VALUE_MIN <= counter <= VALUE_COUNTER_MAX.
+ * POST: message is written to appropriate digital displays;
+ * RETURN: VOID
+ */
+void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t counter) {
 	/* Local Variables */
-	/*******************/
 
 	int8_t message_index = FALSE;
 
@@ -309,12 +350,13 @@ void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 	int8_t message_start = FALSE;
 	int8_t message_end = FALSE;
 
-	message_start = (loop_count > VALUE_DIGIT_MAX) ? VALUE_MIN - 1 : VALUE_MIN;
+	message_start = (counter > VALUE_DIGIT_MAX) ? VALUE_MIN - 1 : VALUE_MIN;
 
+	/* Shift Message Leftwards On the Digital Displays. */
 	while (message_start < (message_length - 1)) {
 		if (resetDAQ() == TRUE) scrollDisplay(message, message_length, display_scrolls);
 
-		message_end = (loop_count > VALUE_DIGIT_MAX) ?
+		message_end = (counter > VALUE_DIGIT_MAX) ?
 			(message_start + 1) + (NUMBER_DISPLAYS - message_length) : message_start + (NUMBER_DISPLAYS - message_length);
 
 		for (display_position = 0; display_position < NUMBER_DISPLAYS; display_position++) {
@@ -322,37 +364,39 @@ void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loo
 			/* Part of Message Moved To Right End of Displays. */
 			if (display_position <= message_start) {
 				message_index = message_start - display_position;
+				/* Write Message to the Appropriate Display Positions. */
 				displayWrite(message[message_index], display_position);
 			}
 			/* Remaining Message at Left End of Displays. */
 			else if (display_position > message_end) {
-				message_index = (loop_count > VALUE_DIGIT_MAX) ?
+				message_index = (counter > VALUE_DIGIT_MAX) ?
 					display_position - ((message_start + 1) + 2 * (relative_position - 1)) : display_position - (message_start + 2 * (relative_position - 1));
+				/* Write Message to the Appropriate Display Positions. */
 				displayWrite(message[message_index], display_position);
 			}
 		}
 
-		display_position = message_start + LEADING_COUNT_OFFSET;
+		display_position = message_start + LEADING_COUNTER_OFFSET;
 
-		/* Loop Counter is Shown With a Single Digital Display Turned Off on Either Side. */
+		/* Write Counter to Appropriate Display Position. */
 		refreshDisplay(message_start + 1, message_end + 1, FALSE);
-		writeCounter(loop_count, display_position);
+		writeCounter(counter, display_position);
 
 		/* Prepare to Shift Message. */
 		message_start++;
 
 		Sleep(DELAY_SHORT);
-	}
+		}
 }
 
 /*
- * Turns On/Off Unused Digital Displays.
+ * Turns On/Off Specified Digital Displays.
  *
- * PARAM: refresh_start and refresh_end are int8_ts which represent
+ * PARAM: refresh_start and refresh_end are uint8_ts which represent
  * 		  the left and right bounds of displays to be turned off respectively.
- * PRE:	VALUE_MIN <= refresh_start < refresh_end <= NUMBER_DISPLAYS
- * POST: digital display at refresh_start .. led display at refresh_end
- * 		 are all turned off.
+ * PRE:	VALUE_MIN <= refresh_start < refresh_end < NUMBER_DISPLAYS
+ * POST: digital display at refresh_start ... digital display at refresh_end
+ * 		 are all either turned on or off.
  * RETURN: VOID
  */
 void refreshDisplay(uint8_t refresh_start, uint8_t refresh_end, uint8_t turn_on) {
@@ -363,9 +407,9 @@ void refreshDisplay(uint8_t refresh_start, uint8_t refresh_end, uint8_t turn_on)
 }
 
 /*
- * Print Error Message to Standard Output and Exit Program.
- * PARAM: message is a char array to print to screen.
- * PRE: error in running MATLAB engine or retrieving data.
+ * Print Error Message to Standard Output Terminal and Exit Program.
+ * PARAM: message is a pointer to a char array to print to screen.
+ * PRE: error in scrolling display program configuration.
  * POST: error message printed to stderr.
  * RETURN: VOID
  */

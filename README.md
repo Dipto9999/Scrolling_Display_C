@@ -9,6 +9,9 @@
     * [Encoding](#Encoding)
 * [Credit](#Credit)
 
+UBC APSC Data Acquisition (DAQ) C Library Installed to Make Use of the Given
+ * Functions and Simulate the Scrolling Display.
+
 ## Overview
 
 A simple <b>C</b> project was written using programming concepts taught in <b>APSC 160 - Introduction to Computation</b>.

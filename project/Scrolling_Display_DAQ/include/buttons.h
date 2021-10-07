@@ -1,9 +1,9 @@
 /*
  * File: buttons.h
  * Purpose: Contains Precompiler Directives, Enumerations
- *          and Function Prototypes for Dealing With Buttons in DAQ Programs.
+ *          and Function Prototypes for Button Events in DAQ Programs.
  * Author: Muntakim Rahman
- * Date: 2021-10-04
+ * Date: 2021-10-06
  */
 
 #ifndef BUTTONS_H
@@ -25,8 +25,14 @@
 #define FALSE 0
 #define TRUE 1
 
-#define RESET_BUTTON 0
-#define RUN_BUTTON 1
+/****************/
+/* Enumerations */
+/****************/
+
+typedef enum {
+    RESET_BUTTON = 0,
+    RUN_BUTTON = 1
+} BUTTONS;
 
 /***********************/
 /* Function Prototypes */

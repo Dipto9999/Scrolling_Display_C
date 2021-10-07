@@ -2,7 +2,7 @@
  * File: main.h
  * Purpose: Contains Constants, Function Prototypes, and Phrase Array.
  * Author: Muntakim Rahman
- * Date: 2021-10-04
+ * Date: 2021-10-06
  */
 
 #ifndef MAIN_H
@@ -20,8 +20,8 @@
 
 #include <Windows.h>
 
-#include "counters.h"
 #include "buttons.h"
+#include "counters.h"
 
 /**************************/
 /* Precompiler Directives */
@@ -30,12 +30,6 @@
 #define PROGRAM_ERROR -1
 
 #define BUFFSIZE 512
-
-#define PHRASE_LENGTH 5
-#define ENDING_LENGTH 6
-
-#define MIN_COUNTER_LENGTH 2
-#define MAX_COUNTER_LENGTH 3
 
 /* Active High Signals used to Turn On 7-Segment Displays. */
 #define DISPLAY_H 0b01101110
@@ -47,8 +41,6 @@
 #define DISPLAY_y 0b01110110
 #define DISPLAY_e 0b11011110
 
-#define LEADING_COUNT_OFFSET 2
-
 /****************/
 /* Enumerations */
 /****************/
@@ -59,16 +51,28 @@ typedef enum {
 	SIMULATOR_CONFIG = 4
 } DAQ_CONFIGS;
 
+typedef enum {
+	PHRASE_LENGTH = 5,
+	ENDING_LENGTH = 6,
+
+	MIN_COUNTER_LENGTH = 2,
+	MAX_COUNTER_LENGTH = 3,
+
+	LEADING_COUNTER_OFFSET = 2
+} MESSAGE_LENGTHS;
+
 /***************************/
-/**** Declare Variables ****/
+/**** Static Variables ****/
 /***************************/
 
 extern char input_buff[];
 extern char output_buff[];
 
-/* Initialize Array with Display 'HELLO' According to DAQ Definitions. */
+/* Initialize Message Arrays According to DAQ Definitions. */
 extern uint8_t phrase_message[];
 extern uint8_t ending_message[];
+
+extern uint8_t display_scrolls;
 
 /***********************/
 /* Function Prototypes */
@@ -77,13 +81,13 @@ extern uint8_t ending_message[];
 int8_t configDAQ(void);
 
 void scrollDisplay(uint8_t* message, uint8_t message_length, int8_t number_scrolls);
-void endDisplay(uint8_t* message, uint8_t message_length, uint8_t loop_count);
+void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter);
 
 void shiftStartingMessage(uint8_t* message, uint8_t message_length);
-void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count);
+void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t counter);
 
-void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count);
-void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t loop_count);
+void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t counter);
+void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t counter);
 
 void refreshDisplay(uint8_t refresh_start, uint8_t refresh_end, uint8_t turn_on);
 

@@ -1,9 +1,10 @@
 /*
  * File: counters.h
  * Purpose: Contains Precompiler Directives, Enumerations
- *          and Function Prototypes for Dealing With Counters in DAQ Programs.
+ *          and Function Prototypes for Dealing With Counters
+ *          in Scrolling Display DAQ Program.
  * Author: Muntakim Rahman
- * Date: 2021-10-04
+ * Date: 2021-10-06
  */
 
 #ifndef COUNTERS_H
@@ -42,13 +43,15 @@
 #define DISPLAY_8 0b11111110
 #define DISPLAY_9 0b11110110
 
-#define VALUE_MIN 0
-#define VALUE_DIGIT_MAX 9
-#define VALUE_COUNTER_MAX 99
-
 /****************/
 /* Enumerations */
 /****************/
+
+typedef enum {
+    VALUE_MIN = 0,
+    VALUE_DIGIT_MAX = 9,
+    VALUE_COUNTER_MAX = 99
+} COUNTER_RANGES;
 
 typedef enum {
     DELAY_STANDARD = 1000,
@@ -59,7 +62,7 @@ typedef enum {
 /* Function Prototypes */
 /***********************/
 
-void writeCounter(uint8_t counter, int8_t display_position);
+void writeCounter(uint8_t counter, int8_t starting_position);
 void writeDigit(uint8_t digit, int8_t display_position);
 
 #endif
