@@ -46,7 +46,7 @@ The **C** source code is written to be compiled and run in the <b>Visual Studio 
 </ul>
 
 <p align="center">
-    <img src="Figures/VS_Configuration_Properties.JPG" width="50%" height="50%" title="Configuration Properties Window." >
+    <img src="figures/VS_Configuration_Properties.JPG" width="50%" height="50%" title="Configuration Properties Window." >
 </p>
 
 ### DAQ Library
@@ -62,26 +62,26 @@ The 8-segment displays in the <b>DAQ</b> library are driven by active-high outpu
 We have encoded the relevant possible displays in the [(`main.h`)](project/Scrolling_Display_DAQ/include/main.h) and [(`counters.h`)](project/Scrolling_Display_DAQ/include/counters.h) header files as shown in the table below.
 
 | 8-Segment Display | Code |
-| ----------------- | ---- |
-| H | 0b01101110 |
-| E | 0b10011110 |
-| L | 0b00011100 |
-| O | 0b11111100 |
-| - | ---------- |
-| b | 0b00111110 |
-| y | 0b01110110 |
-| e | 0b11011110 |
-| - | ---------- |
-| 0 | 0b11111100 |
-| 1 | 0b01100000 |
-| 2 | 0b11011010 |
-| 3 | 0b11110010 |
-| 4 | 0b01100110 |
-| 5 | 0b10110110 |
-| 6 | 0b10111110 |
-| 7 | 0b11100000 |
-| 8 | 0b11111110 |
-| 9 | 0b11110110 |
+| -------- | ---------- |
+| <b>H</b> | 0b01101110 |
+| <b>E</b> | 0b10011110 |
+| <b>L</b> | 0b00011100 |
+| <b>O</b> | 0b11111100 |
+| ________ | __________ |
+| <b>b</b> | 0b00111110 |
+| <b>y</b> | 0b01110110 |
+| <b>e</b> | 0b11011110 |
+| ________ | __________ |
+| <b>0</b> | 0b11111100 |
+| <b>1</b> | 0b01100000 |
+| <b>2</b> | 0b11011010 |
+| <b>3</b> | 0b11110010 |
+| <b>4</b> | 0b01100110 |
+| <b>5</b> | 0b10110110 |
+| <b>6</b> | 0b10111110 |
+| <b>7</b> | 0b11100000 |
+| <b>8</b> | 0b11111110 |
+| <b>9</b> | 0b11110110 |
 
 #### Functions
 
@@ -99,24 +99,24 @@ The functions which are used to scroll the message on the 8-segment displays are
 
 The `void shiftStartingMessage(uint8_t* message, uint8_t message_length);` function is used to implement the following display cases.
 
-| Display Case | Digital Displays |
-| - | ----------------------- |
-| A | __ __ __ __ __ __ __ __ |
-| B | __ __ __ __ __ __ __ H  |
-| C | __ __ __ __ __ __ H  E  |
-| D | __ __ __ __ __ H  E  L  |
-| E | __ __ __ __ H  E  L  L  |
+| <b>Display Case</b> | <b>Digital Displays</b> |
+| -------- | ----------------------- |
+| <b>A</b> | __ __ __ __ __ __ __ __ |
+| <b>B</b> | __ __ __ __ __ __ __ H_ |
+| <b>C</b> | __ __ __ __ __ __ H_ E_ |
+| <b>D</b> | __ __ __ __ __ H_ E_ L_ |
+| <b>E</b> | __ __ __ __ H_ E_ L_ L_ |
 
 ### Complete Message
 
 The `void shiftCompleteMessage(uint8_t* message, uint8_t message_length, uint8_t counter);` function is used to implement the following display cases.
 
-| Display Case | Digital Displays |
-| - | ----------------------- |
-| F | __ __ __ H  E  L  L  O  |
-| G | __ __ H  E  L  L  O  __ |
-| H | __ H  E  L  L  O  __ 9  |
-| I | H  E  L  L  O  __ 9  __ |
+| <b>Display Case</b> | <b>Digital Displays</b> |
+| -------- | ----------------------- |
+| <b>F</b> | __ __ __ H_ E_ L_ L_ O_ |
+| <b>G</b> | __ __ H_ E_ L_ L_ O_ __ |
+| <b>H</b> | __ H_ E_ L_ L_ O_ __ 9_ |
+| <b>I</b> | H_ E_ L_ L_ O_ __ 9_ __ |
 
 For this example, our scrolling display counter is *9*.
 
@@ -124,14 +124,14 @@ For this example, our scrolling display counter is *9*.
 
 The `void shiftSeparatedMessage(uint8_t* message, uint8_t message_length, uint8_t counter);` function is used to implement the following display cases.
 
-| Display Case | Digital Displays |
-| - | ----------------------- |
-| J | E  L  L  O  __ 9  __ H  |
-| K | L  L  O  __ 9  __ H  E  |
-| L | L  O  __ 9  __ H  E  L  |
-| M | O  __ 9  __ H  E  L  L  |
-| N | __ 9  __ H  E  L  L  O  |
-| O | 9  __ H  E  L  L  O  __ |
+| <b>Display Case</b> | <b>Digital Displays</b> |
+| -------- | ----------------------- |
+| <b>J</b> | E_ L_ L_ O_ __ 9_ __ H_ |
+| <b>K</b> | L_ L_ O_ __ 9_ __ H_ E_ |
+| <b>L</b> | L_ O_ __ 9_ __ H_ E_ L_ |
+| <b>M</b> | O_ __ 9_ __ H  E_ L_ L_ |
+| <b>N</b> | __ 9_ __ H_ E_ L_ L_ O_ |
+| <b>O</b> | 9_ __ H_ E_ L_ L_ O_ __ |
 
 For this example, our scrolling display counter is *9*.
 
@@ -139,17 +139,17 @@ For this example, our scrolling display counter is *9*.
 
 The `void shiftCompleteMessage(...);` and `void shiftSeparatedMessage(...);` functions have been written to handle single digit and double digit counters. Based on the appropriate display position, they call the `void writeCounter(uint8_t counter, int8_t starting_position);` function from the [(`counters.c`)]((project/Scrolling_Display_DAQ/src/counters.c)) source file. The following display cases are implemented when the scrolling display counter is greater than *9*.
 
-| Display Case | Digital Displays |
-| - | ----------------------- |
-| P | __ H  E  L  L  O  __ 1  |
-| Q | H  E  L  L  O  __ 1  9  |
-| R | E  L  L  O  __ 1  9  __ |
-| S | L  L  O  __ 1  9  __ H  |
-| T | L  O  __ 1  9  __ H  E  |
-| U | O  __ 1  9  __ H  E  L  |
-| V | __ 1  9  __ H  E  L  L  |
-| W | 1  9  __ H  E  L  L  O  |
-| X | 9  __ H  E  L  L  O  __ |
+| <b>Display Case</b> | <b>Digital Displays</b> |
+| -------- | ----------------------- |
+| <b>P</b> | __ H_ E_ L_ L_ O_ __ 1_ |
+| <b>Q</b> | H_ E_ L_ L_ O_ __ 1_ 9_ |
+| <b>R</b> | E_ L_ L_ O_ __ 1_ 9_ __ |
+| <b>S</b> | L_ L_ O_ __ 1_ 9_ __ H_ |
+| <b>T</b> | L_ O_ __ 1_ 9_ __ H_ E_ |
+| <b>U</b> | O_ __ 1_ 9_ __ H_ E_ L_ |
+| <b>V</b> | __ 1_ 9_ __ H_ E_ L_ L_ |
+| <b>W</b> | 1_ 9_ __ H_ E_ L_ L_ O_ |
+| <b>X</b> | 9_ __ H_ E_ L_ L_ O_ __ |
 
 For this example, our scrolling display counter is *19*.
 
@@ -157,17 +157,16 @@ For this example, our scrolling display counter is *19*.
 
 The `void shiftFinishingMessage(uint8_t* message, uint8_t message_length, uint8_t counter);` function is used to implement the following display cases.
 
-| Display Case | Digital Displays |
-| - | ----------------------- |
-| Y | E  L  L  O  __ 1  9  __ |
-| Z | L  L  O  __ 1  9  __ __ |
-| a | L  O  __ 1  9  __ __ __ |
-| b | O  __ 1  9  __ __ __ __ |
-| c | __ 1  9  __ __ __ __ __ |
-| d | 1  9  __ __ __ __ __ __ |
-| e | 9  __ __ __ __ __ __ __ |
-| f | __ __ __ __ __ __ __ __ |
-| - | ----------------------- |
+| <b>Display Case</b> | <b>Digital Displays</b> |
+| -------- | ----------------------- |
+| <b>Y</b> | E_ L_ L_ O_ __ 1_ 9_ __ |
+| <b>Z</b> | L_ L_ O_ __ 1_ 9_ __ __ |
+| <b>a</b> | L_ O_ __ 1_ 9_ __ __ __ |
+| <b>b</b> | O_ __ 1_ 9_ __ __ __ __ |
+| <b>c</b> | __ 1_ 9_ __ __ __ __ __ |
+| <b>d</b> | 1_ 9_ __ __ __ __ __ __ |
+| <b>e</b> | 9_ __ __ __ __ __ __ __ |
+| <b>f</b> | __ __ __ __ __ __ __ __ |
 
 For this example, our scrolling display counter is *19*.
 
@@ -178,22 +177,24 @@ The `void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter);
 
 This call the `void writeCounter(uint8_t counter, int8_t starting_position);` function from the [(`counters.c`)]((project/Scrolling_Display_DAQ/src/counters.c)) source file.
 
-| g | __ __ __ __ __ __ __ b  |
-| h | __ __ __ __ __ __ b  y  |
-| i | __ __ __ __ __ b  y  e  |
-| j | __ __ __ __ b  y  e  b  |
-| k | __ __ __ b  y  e  b  y  |
-| - | ----------------------- |
-| l | __ __ b  y  e  b  y  e  |
-| m | __ b  y  e  b  y  e  __ |
-| n | b  y  e  b  y  e  __ __ |
-| - | ----------------------- |
-| o | y  e  b  y  e  __ __ __ |
-| p | e  b  y  e  __ __ __ __ |
-| q | b  y  e  __ __ __ __ __ |
-| r | y  e  __ __ __ __ __ __ |
-| s | e  __ __ __ __ __ __ __ |
-| t | 8. 8. 8. 8. 8. 8. 8. 8. |
+| <b>Display Case</b> | <b>Digital Displays</b> |
+| -------- | ----------------------- |
+| <b>g</b> | __ __ __ __ __ __ __ b_ |
+| <b>h</b> | __ __ __ __ __ __ b_ y_ |
+| <b>i</b> | __ __ __ __ __ b_ y_ e_ |
+| <b>j</b> | __ __ __ __ b_ y_ e_ b_ |
+| <b>k</b> | __ __ __ b_ y_ e_ b_ y_ |
+| <b>_</b> | _______________________ |
+| <b>l</b> | __ __ b_ y_ e_ b_ y_ e_ |
+| <b>m</b> | __ b_ y_ e_ b_ y_ e_ __ |
+| <b>n</b> | b_ y_ e_ b_ y_ e_ __ __ |
+| <b>_</b> | _______________________ |
+| <b>o</b> | y_ e_ b_ y_ e_ __ __ __ |
+| <b>p</b> | e_ b_ y_ e_ __ __ __ __ |
+| <b>q</b> | b_ y_ e_ __ __ __ __ __ |
+| <b>r</b> | y_ e_ __ __ __ __ __ __ |
+| <b>s</b> | e_ __ __ __ __ __ __ __ |
+| <b>t</b> | 8. 8. 8. 8. 8. 8. 8. 8. |
 
 ## Demonstration
 
