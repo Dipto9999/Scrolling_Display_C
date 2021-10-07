@@ -16,7 +16,7 @@
 		* [Counters](#Counters)
 	* [Finishing Message](#Finishing-Message)
 	* [Program End](#Program-End)
-* [Demonstration](#Demonstration)
+* [Demonstrations](#Demonstrations)
 * [Credit](#Credit)
 
 ## Overview
@@ -191,9 +191,13 @@ The `void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter);
 | <b>s</b> | e_ __ __ __ __ __ __ __ |
 | <b>t</b> | 8. 8. 8. 8. 8. 8. 8. 8. |
 
-## Demonstration
+## Demonstrations
 
-The videos in the [`demonstrations`](demonstrations) directory show the <b>DAQ</b> configuration and the program output on the software simulator. This directory is tracked using <b>Git LFS</b> due to size restrictions.</i> We have embedded low resolution compressed versions of these files below.
+The videos in the [`demonstrations`](demonstrations) directory show the <b>DAQ</b> configuration and the program output on the software simulator. This directory is tracked using <b>Git LFS</b> due to size restrictions.</i> We have embedded these files below.
+
+https://user-images.githubusercontent.com/52113009/136477404-4c0342cc-c598-47fd-985b-32a8e45c78fd.mp4
+
+https://user-images.githubusercontent.com/52113009/136477416-e8a16141-e2a9-410c-a605-aa397f87b755.mp4
 
 ## Credit
 
