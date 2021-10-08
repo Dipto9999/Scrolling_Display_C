@@ -65,11 +65,9 @@ We have encoded the relevant possible displays in the [(`main.h`)](project/Scrol
 | <b>E</b> | 0b10011110 |
 | <b>L</b> | 0b00011100 |
 | <b>O</b> | 0b11111100 |
-| _ | _ |
 | <b>b</b> | 0b00111110 |
 | <b>y</b> | 0b01110110 |
 | <b>e</b> | 0b11011110 |
-| _ | _ |
 | <b>0</b> | 0b11111100 |
 | <b>1</b> | 0b01100000 |
 | <b>2</b> | 0b11011010 |
@@ -179,11 +177,9 @@ The `void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter);
 | <b>i</b> | __ __ __ __ __ b_ y_ e_ |
 | <b>j</b> | __ __ __ __ b_ y_ e_ b_ |
 | <b>k</b> | __ __ __ b_ y_ e_ b_ y_ |
-| <b>_</b> | _ |
 | <b>l</b> | __ __ b_ y_ e_ b_ y_ e_ |
 | <b>m</b> | __ b_ y_ e_ b_ y_ e_ __ |
 | <b>n</b> | b_ y_ e_ b_ y_ e_ __ __ |
-| <b>_</b> | _ |
 | <b>o</b> | y_ e_ b_ y_ e_ __ __ __ |
 | <b>p</b> | e_ b_ y_ e_ __ __ __ __ |
 | <b>q</b> | b_ y_ e_ __ __ __ __ __ |
