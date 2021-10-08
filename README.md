@@ -85,9 +85,9 @@ We have encoded the relevant possible displays in the [(`main.h`)](project/Scrol
 
 We must setup our simulator by calling the int `int setupDAQ(int setupNum);` function. We leave the <b>DAQ</b> configuration to the user to decide, but it's expected that a hardware module is unavailable.
 
-Afterwards, we write message bytes to positions on the digital display by calling the `void displayWrite(int data, int position);` function. The `void delay(unsigned long ms);` function gives us the ability of periodically shifting the message on the digital displays.
+Afterwards, we write message bytes to positions on the digital display by calling the </br>`void displayWrite(int data, int position);` function. The `void delay(unsigned long ms);` function gives us the ability of periodically shifting the message on the digital displays.
 
-In addition to the scrolling functionality, this program incorporates switch channels. We call the `int digitalRead(int channel);` function to read the current digital state of the switch channels. For our purposes, we use the switches to run and reset our scrolling display.
+In addition to the scrolling functionality, this program incorporates switch channels. We call the </br>`int digitalRead(int channel);` function to read the current digital state of the switch channels. For our purposes, we use the switches to run and reset our scrolling display.
 
 ## Scrolling Algorithm
 
@@ -135,7 +135,7 @@ For this example, our scrolling display counter is *9*.
 
 #### Counters
 
-The `void shiftCompleteMessage(...);` and `void shiftSeparatedMessage(...);` functions have been written to handle single digit and double digit counters. Based on the appropriate display position, they call the `void writeCounter(uint8_t counter, int8_t starting_position);` function from the [(`counters.c`)](project/Scrolling_Display_DAQ/src/counters.c) source file. The following display cases are implemented when the scrolling display counter is greater than *9*.
+The `void shiftCompleteMessage(...);` and `void shiftSeparatedMessage(...);` functions have been written to handle single digit and double digit counters. Based on the appropriate display position, they call the </br>`void writeCounter(uint8_t counter, int8_t starting_position);` function from the [(`counters.c`)](project/Scrolling_Display_DAQ/src/counters.c) source file. The following display cases are implemented when the scrolling display counter is greater than *9*.
 
 | <b>Display Case</b> | <b>Digital Displays</b> |
 | -------- | ----------------------- |
@@ -170,7 +170,7 @@ For this example, our scrolling display counter is *19*.
 
 ### Program End
 
-The `void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter);` function is used to implement the following display cases. After the scrolling iterations of the <i>'HELLO'</i> message have finished, a <i>'byebye'</i> message is scrolled to conclude the program. This is done by calling the `void shiftStartingMessage(...);`, `void shiftCompleteMessage(...);`, and `void shiftFinishingMessage(...);` functions.
+The `void endDisplay(uint8_t* message, uint8_t message_length, uint8_t counter);` function is used to implement the following display cases. After the scrolling iterations of the <i>'HELLO'</i> message have finished, a <i>'byebye'</i> message is scrolled to conclude the program. This is done by calling the `void shiftStartingMessage(...);`, </br>`void shiftCompleteMessage(...);`, and `void shiftFinishingMessage(...);` functions.
 
 | <b>Display Case</b> | <b>Digital Displays</b> |
 | -------- | ----------------------- |
@@ -201,8 +201,6 @@ https://user-images.githubusercontent.com/52113009/136477416-e8a16141-e2a9-410c-
 
 ## Credit
 
-The <b>DAQ</b> library is provided by <b>UBC ECE Department</b> for academic use.
+The idea for this project was derived from <b>The University of British Columbia Electrical and Computer Engineering</b> undergraduate program. The <b>APSC 160 - Introduction to Computation</b> course requirement involves a final project which is a simplified scrolling display. The source code was also refactored and heavily expanded after a formal introduction to <b>Pointers</b> in <b>CPSC 259 : Data Structures and Algorithms for Electrical Engineers</b>.
 
-The idea for this project was derived from <b>The University of British Columbia Electrical and Computer Engineering</b> undergraduate program. The <b>APSC 160 - Introduction to Computation</b> course requirement involves a final project which is a simplified scrolling display. This project was not used as a submission and was developed from scratch.
-
-The source code was also refactored and heavily expanded after a formal introduction to <b>Pointers</b> in <b>CPSC 259 : Data Structures and Algorithms for Electrical Engineers</b> and an introduction to embedded development with microcontrollers.
+The <b>DAQ</b> library is provided by the <b>UBC ECE Department</b> for academic use. This project was not used as a course submission and was developed from scratch.
