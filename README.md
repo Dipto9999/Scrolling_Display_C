@@ -39,8 +39,8 @@ The **C** source code is written to be compiled and run in the <b>Visual Studio 
 
 <ul>
     <li><b>Configuration Properties->Debugging->Environment</b> :</br> <i>PATH=%PATH%;$(DAQLocalInstallPath)\bin64;$(DAQGlobalInstallPath)\bin64;$(LocalDebuggerEnvironment)</i></li>
-    <li><b>C/C++->General->Additional Include Directories</b> :</br> <i>$(SolutionDir)\\Scrolling_Display_DAQ\\include;$(SolutionDir)\Scrolling_Display_DAQ\src;$(DAQLocalInstallPath)\include;$(DAQGlobalInstallPath)\include;%(AdditionalIncludeDirectories)</i></li>
-    <li><b>Linker->General->Additional Library Directories</b> :</br> <i>$\(DAQLocalInstallPath\)\\lib64;$(DAQGlobalInstallPath)\lib64;%(AdditionalLibraryDirectories)</i></li>
+    <li><b>C/C++->General->Additional Include Directories</b> :</br> <i>$(SolutionDir)\Scrolling_Display_DAQ\include;$(SolutionDir)\Scrolling_Display_DAQ\src;$(DAQLocalInstallPath)\include;$(DAQGlobalInstallPath)\include;%(AdditionalIncludeDirectories)</i></li>
+    <li><b>Linker->General->Additional Library Directories</b> :</br> <i>$(DAQLocalInstallPath)\lib64;$(DAQGlobalInstallPath)\lib64;%(AdditionalLibraryDirectories)</i></li>
 </ul>
 
 <p align="center">
